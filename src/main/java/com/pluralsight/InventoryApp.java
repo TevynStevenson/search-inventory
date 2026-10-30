@@ -1,208 +1,235 @@
 package com.pluralsight;
 
-//Import methods
-
 import java.util.*;
 import java.io.*;
-import java.util.ArrayList;;
-
 
 public class InventoryApp {
 
     public static void main(String[] args) {
-        //Main Class
-        //Keep it clean
-        //Add majority of work into other methods, then call those methods to the main method
 
-        //Initialize the inventory list
-        Inventory[] products = getInventory();
+        // Load CSV before opening the menu
+        loadInventory();
 
-        //Add the options menu
-        optionsMenu(products);
-
-
+        // Start application
+        optionsMenu();
     }
 
-    //Other methods
-    //To be run in the main method when finished
+    // Load products from CSV
+    public static void loadInventory() {
 
-    //Start with a method that gets the inventory from the array list
-    //Add add .length method to see length of inventory just in case
+        //Add try statement to read from FileReader/BufferedReader
+        try {
+            FileReader fileReader = new FileReader("inventory.csv");
+            BufferedReader bufferedReader = new BufferedReader(fileReader);
 
-    //Create an arraylist that will hold 5 values right now
+            String line;
 
+            //Add while loop to run into there are no more products
+            while ((line = bufferedReader.readLine()) != null) {
 
-    private static Inventory[] getInventory() {
+                //Split the products by the Pipe(|)
+                String[] lineSplit = line.split("\\|");
 
+                //Have to parse int and double
+                //Because they arent Strings so must convert
+                int productId = Integer.parseInt(lineSplit[0]);
+                String productName = lineSplit[1];
+                double productPrice = Double.parseDouble(lineSplit[2]);
 
-        //Create list of items
+                //Initialize new inventory for added products
+                Inventory addedProduct = new Inventory(
+                        productId, productName, productPrice
+                );
 
-        //List the 5 products
-        Inventory product1 = new Inventory(100, "PlayStation Portable (Psp)", 89.99);
-        Inventory product2 = new Inventory(200, "Nintendo Switch", 169.99);
-        Inventory product3 = new Inventory(300, "Wii", 74.99);
-        Inventory product4 = new Inventory(400, "PlayStation 5 Pro", 399.99);
-        Inventory product5 = new Inventory(500, "Nintendo GameCube", 119.99);
+                Inventory.products.add(addedProduct);
+            }
 
-        //Number the products for the list
-        Inventory[] products = new Inventory[5];
-        products[0] = product1;
-        products[1] = product2;
-        products[2] = product3;
-        products[3] = product4;
-        products[4] = product5;
+           //Close the BufferedReader!!
+            bufferedReader.close();
 
-        return products;
+           //Catch the end of the try
+           //FileNotFoundException if the file cannot be found
+           //Io exception if the file cannot be written into
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found: " + e.getMessage());
+
+        } catch (IOException e) {
+            System.out.println("Error reading file: " + e.getMessage());
+
+        }
     }
 
-    public static void optionsMenu(Inventory[] products) {
+    // Main menu
+    public static void optionsMenu() {
 
+       //Add scanner system
         Scanner myScanner = new Scanner(System.in);
 
-
-        //Add while statement
+        //Add boolean AppRunning to keep the options menu running with the while loop
         boolean appRunning = true;
+        //While loop to go along with the boolean statement
         while (appRunning) {
 
-            //Welcome message
             System.out.println("Welcome To The Inventory App");
             System.out.println("What would you like to do?\n" +
                     "1. List All Products\n" +
-                    "2. Lookup Item \n" +
-                    "3. Add New Product\n" +
-                    "4. Remove Product\n" +
+                    "2. Lookup Item by Id\n" +
+                    "3. Lookup Item by Price\n" +
+                    "4. Add New Product\n" +
                     "5. Exit");
 
-
-            //Store the answer
             int command = myScanner.nextInt();
-            switch (command) {
-                case 1:
-                    listAllProducts(products);
-                    break;
-                case 2:
-                    lookUpProduct(products);
 
+            //Insert switch statements for options menu
+            //1. ListAllProducts
+            //2. Lookup product by ID
+            //3 Lookup item by price (coming soon)
+            //4 Adding a new product
+            //5 exiting the app
+            //Default if invalid
+            switch (command) {
+
+                case 1:
+                    listAllProducts(Inventory.products);
+                    break;
+
+                case 2:
+                    lookUpProduct();
+                    break;
+
+                case 3:
+                    System.out.println("Price lookup coming soon.");
+                    break;
+
+                case 4:
+                    addNewProduct();
                     break;
 
                 case 5:
                     System.out.println("Exiting The Inventory App");
                     appRunning = false;
                     break;
+
+                default:
+                    System.out.println("Invalid selection.");
             }
-
         }
-
-
     }
 
+    // Display all products
+    public static void listAllProducts(ArrayList<Inventory> products) {
 
-
-    //Add options menu
-
-
-
-
-
-    //Add welcome message
-    //Create method for listing all of the products
-    public static void listAllProducts(Inventory[] product) {
         System.out.println("|========= Full Inventory =========|");
-        System.out.println(product[0].getProductId() + " " + product[0].getNameOfItem() + " " + product[0].getPrice());
-        System.out.println(product[1].getProductId() + " " + product[1].getNameOfItem() + " " + product[1].getPrice());
-        System.out.println(product[2].getProductId() + " " + product[2].getNameOfItem() + " " + product[2].getPrice());
-        System.out.println(product[3].getProductId() + " " + product[3].getNameOfItem() + " " + product[3].getPrice());
-        System.out.println(product[4].getProductId() + " " + product[4].getNameOfItem() + " " + product[4].getPrice());
 
+        for (Inventory product : products) {
+
+            System.out.println(
+                    product.getProductId() + " " +
+                            product.getNameOfItem() + " " +
+                            product.getPrice()
+            );
+        }
     }
 
+    // Look up product by ID
+    public static void lookUpProduct() {
 
+        Scanner scanner = new Scanner(System.in);
 
-    public static void lookUpProduct(Inventory[] product) {
-        //Add method for looking up individual item
+        System.out.println("Enter Product ID (0 to exit):");
 
-        //Initialize Scanner
-        //Prompt user to input ProductId|Product Name
-        //Return the product price
+        int productId = scanner.nextInt();
 
-        Scanner productScanner = new Scanner(System.in);
+        for (Inventory product : Inventory.products) {
 
-        //Add boolean
-        //Add while loop
+            if (product.getProductId() == productId) {
+
+                System.out.println("Product Name: " +
+                        product.getNameOfItem());
+
+                System.out.println("Total Price: " +
+                        product.getPrice());
+
+                return;
+            }
+        }
+
+        if (productId != 0) {
+            System.out.println("Product not found.");
+        }
+    }
+
+    // Add new products
+    public static void addNewProduct() {
+
+        Scanner scanner = new Scanner(System.in);
+
         boolean appRunning = true;
+
         while (appRunning) {
 
-            //Get user to enter product id
-            System.out.println("Enter Product ID: (0) to Exit");
-            //Store answer
-            //Return product price
+            System.out.println("Enter Product ID (0 to exit):");
 
-            //Add case switches
-            int productId = productScanner.nextInt();
-            switch (productId) {
-                case 100:
-                    System.out.print("Product Name: " + " " + product[0].getNameOfItem());
-                    System.out.println("\nTotal Price" + " " +  product[0].getPrice());
-                    break;
-                case 200:
-                    System.out.print("Product Name:  " + " " + product[1].getNameOfItem());
-                    System.out.println("\nTotal Price" + " " + product[1].getPrice());
-                    break;
-                case 300:
-                    System.out.print("Product Name: " + " " + product[2].getNameOfItem());
-                    System.out.println("\nTotal Price" + " " + product[2].getPrice());
-                    break;
-                case 400:
-                    System.out.print("Product Name: " + " " + product[3].getNameOfItem());
-                    productScanner.nextLine();
-                    System.out.println("\nTotal Price" + " " + product[3].getPrice());
-                    break;
-                case 500:
-                    System.out.print("Product Name: "  + " " +  product[4].getNameOfItem());
-                    productScanner.nextLine();
-                    System.out.println("\nTotal Price" + " " + product[4].getPrice());
-                    break;
-                case 0:
-                    System.out.print("Exiting...\n");
-                    appRunning = false;
+            int productId = scanner.nextInt();
+
+            if (productId == 0) {
+                break;
             }
 
+            scanner.nextLine();
 
+            System.out.println("Enter Product Name:");
+
+            String productName = scanner.nextLine();
+
+            System.out.println("Enter Product Price:");
+
+            double productPrice = scanner.nextDouble();
+
+            Inventory addedProduct = new Inventory(
+                    productId, productName, productPrice
+            );
+
+            Inventory.products.add(addedProduct);
+
+            System.out.println("Product Successfully Added!");
+
+            System.out.println("Total Products: " +
+                    Inventory.products.size());
+        }
+    }
+
+    public static void lookUpProductByPrice() {
+
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Enter Price Range: (0 to exit):");
+
+        double price = scanner.nextInt();
+
+        for (Inventory product : Inventory.products) {
+
+            if (product.getPrice() >= 100) {
+
+                System.out.println("Product Name: " +
+                        product.getNameOfItem());
+
+                System.out.println("Total Price: " +
+                        product.getPrice());
+
+                return;
+            } else if (product.getPrice() <= price) {
+            }
         }
 
-
+        if (price != 0) {
+            System.out.println("Product not found.");
         }
-
-        public void addNewProduct(Inventory product) {
-        //Add Scanner
-        Scanner newProductScanner = new Scanner(System.in);
-
-        //Add boolean statement for the app chosen
-        //Add while loop to keep to the app running until close
-        boolean appRunning = true;
-        while (appRunning) {
-
-            //Prompt user for Product Id
-            System.out.println("Enter Product ID: (0) to Exit");
-            int productId = newProductScanner.nextInt();
-            //Prompt user for product name
-            System.out.println("Enter Product Name: (0) to Exit");
-            String productName = newProductScanner.nextLine();
-            //Prompt user for product price
-            System.out.println("Enter Product Price: (0) to Exit");
-            double productPrice = newProductScanner.nextDouble();
-        }
-
-
-
-        }
-
-
-
-
-
-//End curly brace end entire class method
+    }
 }
+
+
+
 
 
 
