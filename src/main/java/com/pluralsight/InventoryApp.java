@@ -14,7 +14,12 @@ public class InventoryApp {
         //Keep it clean
         //Add majority of work into other methods, then call those methods to the main method
 
-        getInventory();
+        //Initialize the inventory list
+        Inventory[] products = getInventory();
+
+        //Add the options menu
+        optionsMenu(products);
+
 
     }
 
@@ -27,9 +32,7 @@ public class InventoryApp {
     //Create an arraylist that will hold 5 values right now
 
 
-    public static void getInventory() {
-
-
+    private static Inventory[] getInventory() {
 
 
         //Create list of items
@@ -49,10 +52,12 @@ public class InventoryApp {
         products[3] = product4;
         products[4] = product5;
 
+        return products;
+    }
+
+    public static void optionsMenu(Inventory[] products) {
 
         Scanner myScanner = new Scanner(System.in);
-
-
 
 
         //Add while statement
@@ -63,7 +68,10 @@ public class InventoryApp {
             System.out.println("Welcome To The Inventory App");
             System.out.println("What would you like to do?\n" +
                     "1. List All Products\n" +
-                    "2. Exit Program");
+                    "2. Lookup Item \n" +
+                    "3. Add New Product\n" +
+                    "4. Remove Product\n" +
+                    "5. Exit");
 
 
             //Store the answer
@@ -73,6 +81,11 @@ public class InventoryApp {
                     listAllProducts(products);
                     break;
                 case 2:
+                    lookUpProduct(products);
+
+                    break;
+
+                case 5:
                     System.out.println("Exiting The Inventory App");
                     appRunning = false;
                     break;
@@ -83,6 +96,14 @@ public class InventoryApp {
 
     }
 
+
+
+    //Add options menu
+
+
+
+
+
     //Add welcome message
     //Create method for listing all of the products
     public static void listAllProducts(Inventory[] product) {
@@ -92,17 +113,91 @@ public class InventoryApp {
         System.out.println(product[2].getProductId() + " " + product[2].getNameOfItem() + " " + product[2].getPrice());
         System.out.println(product[3].getProductId() + " " + product[3].getNameOfItem() + " " + product[3].getPrice());
         System.out.println(product[4].getProductId() + " " + product[4].getNameOfItem() + " " + product[4].getPrice());
-    }
-
-
-    //Create a method for welcome message
-    public static void welcomeApp(Scanner myScanner) {
-        myScanner = new Scanner(System.in);
-        System.out.print("Welcome to Inventory App\n" +
-                "What would you like to do?");
-        myScanner.nextLine();
 
     }
+
+
+
+    public static void lookUpProduct(Inventory[] product) {
+        //Add method for looking up individual item
+
+        //Initialize Scanner
+        //Prompt user to input ProductId|Product Name
+        //Return the product price
+
+        Scanner productScanner = new Scanner(System.in);
+
+        //Add boolean
+        //Add while loop
+        boolean appRunning = true;
+        while (appRunning) {
+
+            //Get user to enter product id
+            System.out.println("Enter Product ID: (0) to Exit");
+            //Store answer
+            //Return product price
+
+            //Add case switches
+            int productId = productScanner.nextInt();
+            switch (productId) {
+                case 100:
+                    System.out.print("Product Name: " + " " + product[0].getNameOfItem());
+                    System.out.println("\nTotal Price" + " " +  product[0].getPrice());
+                    break;
+                case 200:
+                    System.out.print("Product Name:  " + " " + product[1].getNameOfItem());
+                    System.out.println("\nTotal Price" + " " + product[1].getPrice());
+                    break;
+                case 300:
+                    System.out.print("Product Name: " + " " + product[2].getNameOfItem());
+                    System.out.println("\nTotal Price" + " " + product[2].getPrice());
+                    break;
+                case 400:
+                    System.out.print("Product Name: " + " " + product[3].getNameOfItem());
+                    productScanner.nextLine();
+                    System.out.println("\nTotal Price" + " " + product[3].getPrice());
+                    break;
+                case 500:
+                    System.out.print("Product Name: "  + " " +  product[4].getNameOfItem());
+                    productScanner.nextLine();
+                    System.out.println("\nTotal Price" + " " + product[4].getPrice());
+                    break;
+                case 0:
+                    System.out.print("Exiting...\n");
+                    appRunning = false;
+            }
+
+
+        }
+
+
+        }
+
+        public void addNewProduct(Inventory product) {
+        //Add Scanner
+        Scanner newProductScanner = new Scanner(System.in);
+
+        //Add boolean statement for the app chosen
+        //Add while loop to keep to the app running until close
+        boolean appRunning = true;
+        while (appRunning) {
+
+            //Prompt user for Product Id
+            System.out.println("Enter Product ID: (0) to Exit");
+            int productId = newProductScanner.nextInt();
+            //Prompt user for product name
+            System.out.println("Enter Product Name: (0) to Exit");
+            String productName = newProductScanner.nextLine();
+            //Prompt user for product price
+            System.out.println("Enter Product Price: (0) to Exit");
+            double productPrice = newProductScanner.nextDouble();
+        }
+
+
+
+        }
+
+
 
 
 
